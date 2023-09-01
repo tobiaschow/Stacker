@@ -19,16 +19,30 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
     public static BufferedImage credit;
     public static BufferedImage game;
     public static BufferedImage gameover;
+    public static BufferedImage smiley;
 
     // Mouse/Keyboard Events
     public static int mouseX;
     public static int mouseY;
 
+    // Game Stats
+    public static int score;
+    public static int lives;
+    public static int direction;
+    public static int[][] board;
+    public static int row;
+    public static int leftPos;
+    public static int rightPos;
+    public static int leftBound;
+    public static int rightBound;
+    public static int frameCounter;
+    public static int frameCounterMax;
+
     public void run() {
         while(true) {
             repaint();
             try {
-                Thread.sleep(80);
+                Thread.sleep(17);
             }
             catch(Exception e) {
                 System.out.println("Timer Error");
@@ -47,11 +61,118 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
         }
         else if(gameState == 2){
             g.drawImage(game, 0, 0, null);
+            for (int r = 0; r < 10; r++){
+                for (int c = 0; c < 10; c++){
+                    if(board[r][c] == 1){
+                        g.drawImage(smiley, c*40, r*40+120, null);
+                    }
+                }
+            }
+            frameCounter++;
+            if(frameCounter == frameCounterMax){
+                updateRow();
+                frameCounter = 0;
+            }
         }
         else if(gameState == 3){
             g.drawImage(gameover, 0, 0, null);
         }
 
+    }
+
+    public static void updateRow(){
+        for(int c = 0; c < 10; c++){
+            board[row][c] = 0;
+        }
+        if(direction == 1 && rightPos == 9){
+            direction = -1;
+        }
+
+        if(direction == -1 && leftPos == 0){
+            direction = 1;
+        }
+
+        leftPos += direction;
+        rightPos += direction;
+
+        for(int i = 0; i < lives; i++){
+            board[row][leftPos+i]=1;
+        }
+
+    }
+
+    public static void stack(){
+        if (row == 9){
+            score++;
+            // lives = 3;
+            frameCounter = 0;
+            frameCounterMax -= 1;
+            board[row][leftPos] = 1;
+            board[row][leftPos+1] = 1;
+            board[row][leftPos+2] = 1;
+            leftBound = leftPos;
+            rightBound = leftPos + 2;
+            row--;
+        }
+        else{
+            //If the left side is on the right side of bounds, OR
+            //If the right side is on the left side of bounds -> Game Over
+            if(leftPos > rightBound || leftPos+lives-1 < leftBound){
+                gameState = 3;
+            }
+            //If left side is on left bound, AND
+            //If right side is on right bound -> perfect stack
+            else if(leftPos == leftBound && rightPos == rightBound){
+                score++;
+                frameCounter = 0;
+                frameCounterMax -= 1;
+                for(int i = 0; i < lives; i++){
+                    board[row][leftPos+i] = 1;
+                }
+                row--;
+            }
+
+            // Case: Partially out of bound
+            else{
+                // if leftPos is out of bound
+                if(leftPos < leftBound){
+                    score++;
+                    for(int i = 0; i < lives; i++){
+                        board[row][leftPos+i] = 0;
+                    }
+                    lives -= leftBound-leftPos;
+                    frameCounter = 0;
+                    frameCounterMax -= 1;
+                    for(int i = 0; i < lives; i++){
+                        board[row][leftBound+i] = 1;
+                    }
+                    leftPos = leftBound;
+                    rightPos = leftPos+lives-1;
+                    rightBound = rightPos;
+                    row--;
+                }
+                // if rightPos is out of bound
+                else{
+                    score++;
+                    for(int i = 0; i < lives; i++){
+                        board[row][leftPos+i] = 0;
+                    }
+                    lives -= rightPos-rightBound;
+                    frameCounter = 0;
+                    frameCounterMax -= 1;
+                    for(int i = 0; i < lives; i++){
+                        board[row][rightBound-i] = 1;
+                    }
+                    rightPos = rightBound;
+                    leftPos = rightPos - lives+1;
+                    leftBound = leftPos;
+                    row--;
+                }
+            }
+            if (lives == 0 || score == 10){
+                gameState = 3;
+            }
+        }
     }
 
     public Main(){
@@ -60,6 +181,7 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
             credit = ImageIO.read(new File("credit.png"));
             game = ImageIO.read(new File("game.png"));
             gameover = ImageIO.read(new File("gameover.png"));
+            smiley = ImageIO.read(new File("smiley.png"));
         }
         catch (Exception e){
             System.out.println("Image Error");
@@ -96,6 +218,18 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
             }
             else if (120 <= mouseX && mouseX <= 280 && 425 <= mouseY && mouseY <= 475){
                 gameState = 2;
+                score = 0;
+                lives = 3;
+                direction = 1;
+                row = 9;
+                board = new int[10][10];
+                leftPos = 0;
+                rightPos = 2;
+                frameCounter = 0;
+                frameCounterMax = 10;
+                board[row][0] = 1;
+                board[row][1] = 1;
+                board[row][2] = 1;
             }
         }
         else if(gameState == 1){
@@ -118,6 +252,9 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
         if(gameState == 2) {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 gameState = 3;
+            }
+            if(e.getKeyChar() == ' '){
+                stack();
             }
         }
     }
