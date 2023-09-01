@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd23de50-68d4-4169-a964-c07f5d414405" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="bd23de50-68d4-4169-a964-c07f5d414405" name="Changes" comment="Commit - Interface Setup">
+      <change afterPath="$PROJECT_DIR$/credit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/home.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,6 +50,14 @@
       <option name="presentableId" value="Default" />
       <updated>1693580741301</updated>
     </task>
+    <task id="LOCAL-00001" summary="Commit - Interface Setup">
+      <created>1693583030219</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1693583030219</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -60,5 +70,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commit - Interface Setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit - Interface Setup" />
   </component>
 </project>
