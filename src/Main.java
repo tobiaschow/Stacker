@@ -26,6 +26,7 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
     public static int mouseY;
 
     // Game Stats
+
     public static int score;
     public static int lives;
     public static int direction;
@@ -68,6 +69,9 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
                     }
                 }
             }
+            g.setFont(new Font("Calibri", Font.PLAIN, 20));
+            g.setColor(new Color(255, 255, 255));
+            g.drawString("Score: " + score, 175, 20);
             frameCounter++;
             if(frameCounter == frameCounterMax){
                 updateRow();
@@ -102,9 +106,8 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
     }
 
     public static void stack(){
+
         if (row == 9){
-            score++;
-            // lives = 3;
             frameCounter = 0;
             frameCounterMax -= 1;
             board[row][leftPos] = 1;
@@ -123,7 +126,6 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
             //If left side is on left bound, AND
             //If right side is on right bound -> perfect stack
             else if(leftPos == leftBound && rightPos == rightBound){
-                score++;
                 frameCounter = 0;
                 frameCounterMax -= 1;
                 for(int i = 0; i < lives; i++){
@@ -153,7 +155,6 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
                 }
                 // if rightPos is out of bound
                 else{
-                    score++;
                     for(int i = 0; i < lives; i++){
                         board[row][leftPos+i] = 0;
                     }
@@ -169,10 +170,11 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
                     row--;
                 }
             }
-            if (lives == 0 || score == 10){
+            if (lives == 0 || row == -1){
                 gameState = 3;
             }
         }
+        score += lives;
     }
 
     public Main(){
@@ -226,7 +228,7 @@ public class Main extends JPanel implements MouseListener, KeyListener, Runnable
                 leftPos = 0;
                 rightPos = 2;
                 frameCounter = 0;
-                frameCounterMax = 10;
+                frameCounterMax = 9;
                 board[row][0] = 1;
                 board[row][1] = 1;
                 board[row][2] = 1;
